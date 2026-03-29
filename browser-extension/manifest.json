@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "UniTrack — Save to Job Tracker",
+  "version": "1.0.0",
+  "description": "Save graduate job listings to your UniTrack dashboard in one click.",
+  "permissions": ["activeTab", "storage", "scripting"],
+  "host_permissions": [
+    "https://seek.com.au/*",
+    "https://www.seek.com.au/*",
+    "https://linkedin.com/*",
+    "https://www.linkedin.com/*",
+    "https://gradaustralia.com.au/*",
+    "https://prosple.com/*",
+    "https://gradconnection.com.au/*"
+  ],
+  "content_scripts": [{
+    "matches": [
+      "https://www.seek.com.au/job/*",
+      "https://www.linkedin.com/jobs/view/*",
+      "https://gradaustralia.com.au/graduate-jobs/*",
+      "https://prosple.com/graduate-employers/*",
+      "https://gradconnection.com.au/graduate-jobs/*"
+    ],
+    "js": ["content.js"]
+  }],
+  "action": { "default_popup": "popup.html" },
+  "icons": { "16": "icon-16.png", "48": "icon-48.png", "128": "icon-128.png" }
+}

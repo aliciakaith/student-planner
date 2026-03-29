@@ -42,24 +42,25 @@ export function Header({ user }: HeaderProps) {
         <NotificationBell />
 
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="outline-none">
-              <Avatar className="h-8 w-8 cursor-pointer">
-                <AvatarImage src={user.user_metadata?.avatar_url} />
-                <AvatarFallback className="text-xs">{initials}</AvatarFallback>
-              </Avatar>
-            </button>
+          <DropdownMenuTrigger
+            nativeButton={false}
+            render={<button className="outline-none" />}
+          >
+            <Avatar className="h-8 w-8 cursor-pointer">
+              <AvatarImage src={user.user_metadata?.avatar_url} />
+              <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+            </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
             <div className="px-2 py-1.5">
               <p className="text-xs text-muted-foreground truncate">{user.email}</p>
             </div>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <a href="/settings" className="flex items-center gap-2 cursor-pointer">
-                <UserIcon className="h-4 w-4" />
-                Settings
-              </a>
+            <DropdownMenuItem
+              render={<a href="/settings" className="flex items-center gap-2 cursor-pointer" />}
+            >
+              <UserIcon className="h-4 w-4" />
+              Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem

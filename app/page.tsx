@@ -23,11 +23,11 @@ export default function Home() {
         </p>
 
         <div className="flex gap-4">
-          <Button asChild size="lg">
-            <Link href="/signup">Get started</Link>
+          <Button size="lg" nativeButton={false} render={<Link href="/signup" />}>
+            Get started
           </Button>
-          <Button variant="outline" size="lg" asChild>
-            <Link href="/login">Sign in</Link>
+          <Button variant="outline" size="lg" nativeButton={false} render={<Link href="/login" />}>
+            Sign in
           </Button>
         </div>
       </main>

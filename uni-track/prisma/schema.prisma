@@ -1,0 +1,162 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id              String     @id @default(uuid())
+  email           String     @unique
+  fullName        String?
+  avatarUrl       String?
+  university      String?
+  degree          String?
+  fieldOfStudy    String?
+  graduationYear  Int?
+  workRights      WorkRights @default(CITIZEN)
+  canvasUrl       String?
+  canvasTokenEnc  String?
+  preferences     Json?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  jobApplications JobApplication[]
+  aiSummaries     AISummary[]
+  notifications   Notification[]
+  jobSearches     JobSearch[]
+  canvasCache     CanvasCache[]
+
+  @@map("users")
+}
+
+enum WorkRights {
+  CITIZEN
+  PERMANENT_RESIDENT
+  STUDENT_VISA
+  WORKING_VISA
+  OTHER
+}
+
+model JobApplication {
+  id                  String            @id @default(uuid())
+  userId              String
+  user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  company             String
+  roleTitle           String
+  location            String?
+  salary              String?
+  jobUrl              String?
+  source              JobSource         @default(MANUAL)
+  industry            String?
+  roleType            RoleType          @default(GRADUATE_PROGRAM)
+  description         String?
+
+  status              ApplicationStatus @default(BOOKMARKED)
+  applicationDeadline DateTime?
+  appliedAt           DateTime?
+  notes               String?
+  aiTips              String?
+
+  savedFromSearch     String?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  @@map("job_applications")
+}
+
+enum JobSource {
+  MANUAL
+  AI_SEARCH
+  BROWSER_EXTENSION
+  SEEK
+  LINKEDIN
+  PROSPLE
+  GRAD_AUSTRALIA
+  GRAD_CONNECTION
+  OTHER
+}
+
+enum RoleType {
+  GRADUATE_PROGRAM
+  INTERNSHIP
+  PART_TIME
+  CASUAL
+  CONTRACT
+  FULL_TIME
+}
+
+enum ApplicationStatus {
+  BOOKMARKED
+  APPLYING
+  APPLIED
+  INTERVIEW
+  OFFER
+  REJECTED
+}
+
+model AISummary {
+  id          String      @id @default(uuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        SummaryType
+  content     Json
+  generatedAt DateTime    @default(now())
+
+  @@map("ai_summaries")
+}
+
+enum SummaryType {
+  WEEKLY
+  MONTHLY
+}
+
+model CanvasCache {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dataType  String
+  courseId  String?
+  data      Json
+  fetchedAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@unique([userId, dataType, courseId])
+  @@map("canvas_cache")
+}
+
+model JobSearch {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  query       Json
+  results     Json
+  resultCount Int      @default(0)
+  searchedAt  DateTime @default(now())
+
+  @@map("job_searches")
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  title     String
+  body      String
+  read      Boolean          @default(false)
+  link      String?
+  createdAt DateTime         @default(now())
+
+  @@map("notifications")
+}
+
+enum NotificationType {
+  ASSIGNMENT_DUE
+  JOB_DEADLINE
+  NEW_JOB_FOUND
+  AI_SUMMARY_READY
+  APPLICATION_REMINDER
+}
